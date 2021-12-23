@@ -5,78 +5,77 @@ import java.util.Scanner;
  * @Date: 2021-12-23 16:17
  */
 public class ChessCover {
-    int size;//容量
-    int[][] board;//棋盘
+    int size;//棋盘的行
+    int[][] chess;//棋盘
     int number = 0;//L形编号
+
+    //特殊点坐标 （specialRow，specialCol）
+    int specialRow;
+    int specialCol;
 
     public ChessCover(int specialRow, int specialCol, int size) {
         this.size = size;
-        board = new int[size][size];
+        this.specialRow = specialRow;
+        this.specialCol = specialCol;
+        this.chess = new int[size][size];
     }
 
-    //specialROW   特殊点的行下标
-    //specialCOL   特殊点的列下标
-    //leftRow      矩阵的左边起点行下标
-    //leftCol      矩阵左边起点的列下标
-    //size         矩阵的宽或者高
+    // 特殊方格如果出现在左上角，则L型骨牌的方向朝向右下角；
+    // 如果出现在右上角，则L型骨牌的方向朝向左下角；
+    // 如果出现在左下角，则L型骨牌的方向朝向右上角；
+    // 如果出现在右下角，则L型骨牌的方向朝向左上角。
+    // 矩阵左起点 （leftRow，leftCol）
+    public void setChess(int specialRow,int specialCol,int leftRow, int leftCol, int size) {
 
-    public void setBoard(int specialROW, int specialCOL, int leftROW, int leftCOL, int size) {
-        if (1 == size) {
-            return;
-        }
+        if (1 == size) return;
 
         int subSize = size / 2;
-        number++;
-        int n = number;//注意这里一定要吧number存在当前的递归层次里，否则进入下一层递归全局变量会发生改变
+        int n = ++number;
 
-        //假设特殊点在左上角区域
-        if (specialROW < leftROW + subSize && specialCOL < leftCOL + subSize) {
-            setBoard(specialROW, specialCOL, leftROW, leftCOL, subSize);
-        }
-        else {
-            //不在左上角，设左上角矩阵的右下角就是特殊点（和别的一起放置L形）
-            board[leftROW + subSize - 1][leftCOL + subSize - 1] = n;
-            setBoard(leftROW + subSize - 1, leftCOL + subSize - 1, leftROW, leftCOL, subSize);
+        //特殊点在左上角区域
+        if (specialRow < (leftRow + subSize) && specialCol < (leftCol + subSize)) {
+            setChess(specialRow,specialCol,leftRow, leftCol, subSize);
+        }else {
+            //左上角矩阵的右下角就是特殊点
+            chess[leftRow + subSize - 1][leftCol + subSize - 1] = n;
+            setChess(leftRow + subSize - 1, leftCol + subSize - 1, leftRow, leftCol, subSize);
         }
 
-        //假设特殊点在右上方
-        if (specialROW < leftROW + subSize && specialCOL >= leftCOL + subSize) {
-            setBoard(specialROW, specialCOL, leftROW, leftCOL + subSize, subSize);
-        }
-        else {
-            //不在右上方，设右上方矩阵的左下角就是特殊点（和别的一起放置L形）
-            board[leftROW + subSize -1][leftCOL + subSize] = n;
-            setBoard(leftROW + subSize -1, leftCOL + subSize, leftROW, leftCOL + subSize, subSize);
+        //特殊点在右上方
+        if (specialRow < leftRow + subSize && specialCol >= leftCol + subSize) {
+            setChess(specialRow, specialCol, leftRow, leftCol + subSize, subSize);
+        }else {
+            //右上方矩阵的左下角就是特殊点
+            chess[leftRow + subSize -1][leftCol + subSize] = n;
+            setChess(leftRow + subSize -1, leftCol + subSize, leftRow, leftCol + subSize, subSize);
         }
 
         //特殊点在左下方
-        if (specialROW >= leftROW + subSize && specialCOL < leftCOL + subSize) {
-            setBoard(specialROW, specialCOL, leftROW + subSize, leftCOL, subSize);
-        }
-        else {
-            //不在左下方，设左下方矩阵的右上角就是特殊点（和别的一起放置L形）
-            board[leftROW + subSize][leftCOL + subSize - 1] = n;
-            setBoard(leftROW + subSize, leftCOL + subSize - 1, leftROW + subSize, leftCOL, subSize);
+        if (specialRow >= leftRow + subSize && specialCol < leftCol + subSize) {
+            setChess(specialRow, specialCol, leftRow + subSize, leftCol, subSize);
+        }else {
+            //左下方矩阵的右上角就是特殊点
+            chess[leftRow + subSize][leftCol + subSize - 1] = n;
+            setChess(leftRow + subSize, leftCol + subSize - 1, leftRow + subSize, leftCol, subSize);
         }
 
         //特殊点在右下角
-        if (specialROW >= leftROW + subSize && specialCOL >= leftCOL + subSize) {
-            setBoard(specialROW, specialCOL, leftROW + subSize, leftCOL + subSize, subSize);
-        }
-        else {
-            //不在右下角，设右下角矩阵的左上就是特殊点（和别的一起放置L形）
-            board[leftROW + subSize][leftCOL + subSize] = n;
-            setBoard(leftROW + subSize, leftCOL + subSize, leftROW + subSize, leftCOL + subSize, subSize);
+        if (specialRow >= leftRow + subSize && specialCol >= leftCol + subSize) {
+            setChess(specialRow, specialCol, leftRow + subSize, leftCol + subSize, subSize);
+        }else {
+            //右下角矩阵的左上就是特殊点
+            chess[leftRow + subSize][leftCol + subSize] = n;
+            setChess(leftRow + subSize, leftCol + subSize, leftRow + subSize, leftCol + subSize, subSize);
         }
     }
 
 
-    public void printBoard(int specialRow,int specialCol,int size) {
-        setBoard(specialRow, specialCol, 0, 0, size);
-        System.out.println();
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board.length; j++) {
-                System.out.print(board[i][j] + " ");
+    public void printChess() {
+        setChess(specialRow,specialCol,0, 0, size);
+        System.out.println("\n"+ "chess:");
+        for (int[] b : chess) {
+            for (int x :b) {
+                System.out.print(x+"\t");
             }
             System.out.println();
         }
@@ -84,20 +83,21 @@ public class ChessCover {
 
 
     public static void main(String[] args) {
-        int specialRow = 0;
-        int specialCol = 0;
-        int row = 0;
+        int specialRow;
+        int specialCol;
+        int row;
         Scanner sc = new Scanner(System.in);
-        System.out.println("please enter special row&column and row of chess in turn: [eg: 0 1 4] ");
+        System.out.println("please enter special row&column and k(size of chess:2^k x 2^k{k>=0}) in turn: [eg: 0 1 2] ");
         while(true){
             specialRow = sc.nextInt();
             specialCol = sc.nextInt();
-            row = sc.nextInt();
+
+            row = (int)Math.pow(sc.nextInt(),2);
             if(specialRow<row&&specialCol<row&&row>0) break;
             System.out.println("enter error!");
         }
         ChessCover chessCover = new ChessCover(specialRow , specialCol , row);
-        chessCover.printBoard(specialRow, specialCol, row);
+        chessCover.printChess();
     }
 
 }
