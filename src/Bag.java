@@ -3,47 +3,76 @@
  * @Date: 2021-12-23 17:14
  */
 public class Bag {
-    public static int knapsack(int[] weight, int[] value, int maxweight){
 
-        int n = weight.length;
-        //最大价值数组为maxvalue[N+1][maxWeight+1]，因为我们要从0开始保存
-        int[][] maxvalue = new int[n+1][maxweight + 1];
+    int[][] maxValue;//当前背包最重重量（dp解决）
+    int bagWeight;//背包能承受最大重量
 
-        //重量和物品为0时，价值为0
-        for (int i = 0; i < maxweight + 1; i++) {
-            maxvalue[0][i] = 0;
+    int n;//物品个数
+    int[] weight;//物品重量
+    int[] value;//物品价值
 
-        }
-        for (int i = 0; i < n + 1; i++) {
-            maxvalue[i][0] = 0;
+    public Bag(int[] weight, int[] value,int bagWeight) {
+        this.bagWeight = bagWeight;
+        this.weight = weight;
+        this.value = value;
 
-        }
+        this.n = weight.length;
 
-        //i：只拿前i件物品（这里的i因为取了0，所以对应到weight和value里面都是i-1号位置）
-        //j：假设能取的总重量为j
-        //n是物品件数
+        this.maxValue = new int[n+1][bagWeight + 1];
+    }
+
+    public void bag(int[] weight, int[] value, int bagWeight){
+
+
         for (int i = 1; i <= n ; i++) {
-            for (int j = 1; j <= maxweight; j++) {
-                //当前最大价值等于放上一件的最大价值
-                maxvalue[i][j] = maxvalue[i-1][j];
-                //如果当前件的重量小于总重量，可以放进去或者拿出别的东西再放进去
-                if (weight[i-1] <= j) {
-                    //比较（不放这个物品的价值）和
-                    //（这个物品的价值 加上 当前能放的总重量减去当前物品重量时取前i-1个物品时的对应重量时候的最高价值）
-                    if(maxvalue[i-1][j - weight[i-1]] + value[i-1]>maxvalue[i-1][j]) {
-                        maxvalue[i][j] = maxvalue[i-1][j - weight[i-1]] + value[i-1];
-                    }
+            for (int j = 1; j <= bagWeight; j++) {
+
+                maxValue[i][j] = maxValue[i-1][j];
+
+                if (j - weight[i-1] >= 0) {
+                    maxValue[i][j] = Math.max(maxValue[i][j],(maxValue[i-1][j - weight[i-1]] + value[i-1]));
                 }
             }
         }
-        return maxvalue[n][maxweight];
+
+        System.out.println();
+        for(int[] m: maxValue){
+            for(int x: m){
+                System.out.print(x+"\t");
+            }
+            System.out.println();
+        }
+        System.out.println();
+
+        System.out.println("maxValue: " +maxValue[n][bagWeight]);
+
     }
+
+    //回推求最优解
+    public void traceback() {
+
+        System.out.println("\ngoods of bag: ");
+
+        int nowWeight = bagWeight;
+
+        for(int i=n;i>=1;i--){
+            if(maxValue[i][nowWeight]>maxValue[i-1][nowWeight]){
+                System.out.printf(i+"\t");
+                nowWeight-=weight[i-1];
+
+            }
+        }
+
+        System.out.println();
+    }
+
     public static void main(String[] args) {
-        // TODO 自动生成的方法存根
-        int weight[] = {2,3,4,5};
-        int value[] = {3,4,5,7};
-        int maxweight = 9;
-        System.out.println(knapsack(weight, value, maxweight));
+        int weight[] = {2,1,3,2};
+        int value[] = {12,10,20,15};
+        int bagWeight = 5;
+        Bag bag = new Bag(weight,value,bagWeight);
+        bag.bag(weight, value, bagWeight);
+        bag.traceback();
     }
 
 }
