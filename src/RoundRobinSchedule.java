@@ -36,7 +36,7 @@ public class RoundRobinSchedule {
         while(true){
             int enter = scan.nextInt();
             if(enter>0){
-                num=(int) Math.pow(enter,2);
+                num=(int) Math.pow(2,enter);
                 break;
             }
             System.out.println("enter error!");

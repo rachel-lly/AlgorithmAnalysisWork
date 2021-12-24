@@ -92,7 +92,7 @@ public class ChessCover {
             specialRow = sc.nextInt();
             specialCol = sc.nextInt();
 
-            row = (int)Math.pow(sc.nextInt(),2);
+            row = (int)Math.pow(2,sc.nextInt());
             if(specialRow<row&&specialCol<row&&row>0) break;
             System.out.println("enter error!");
         }
