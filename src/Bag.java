@@ -57,7 +57,7 @@ public class Bag {
 
         for(int i=n;i>=1;i--){
             if(maxValue[i][nowWeight]>maxValue[i-1][nowWeight]){
-                System.out.printf(i+"\t");
+                System.out.print(i+"\t");
                 nowWeight-=weight[i-1];
 
             }
@@ -67,8 +67,8 @@ public class Bag {
     }
 
     public static void main(String[] args) {
-        int weight[] = {2,1,3,2};
-        int value[] = {12,10,20,15};
+        int[] weight = {2,1,3,2};
+        int[] value = {12,10,20,15};
         int bagWeight = 5;
         Bag bag = new Bag(weight,value,bagWeight);
         bag.bag(weight, value, bagWeight);
