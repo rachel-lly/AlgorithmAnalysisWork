@@ -1,4 +1,4 @@
-import java.util.LinkedList;
+import java.util.Scanner;
 
 /**
  * @Author: rachel-lly
@@ -6,44 +6,58 @@ import java.util.LinkedList;
  */
 public class RoundRobinSchedule {
 
-    private int num; // 人数
-    private LinkedList<Integer> list = new LinkedList<Integer>();
-    public RoundRobinSchedule(int n)  {
-        this.num = n;
-        init();
+    public static int[][] table(int n){
+
+        int[][] a = new int[n][n];
+        //参赛人员
+        for(int i = 0; i<n;i++)
+            a[0][i] = i+1;
+
+        //采用分治算法，构造整个赛程表
+        for(int r = 1;r<n;r<<=1){
+            for(int i =0;i<n;i += 2*r){
+                copy(a,r,r+i, i,r);
+                copy(a,r,i, r+i,r);
+            }
+        }
+        return a;
     }
 
-    private void init()  {
-        if (num % 2 == 0)  { //偶数个
-            for (int i = 0; i < num; i++) {
-                list.add(i + 1);
-            }
+    private static void copy(int[][] a, int tox, int toy, int fromy, int r){
+        for(int i =0;i<r;i++){
+            System.arraycopy(a[i], fromy, a[tox + i], toy, r);
         }
-        else  //奇数个
-        {
-            for (int i = 0; i < num; i++)
-            {
-                list.add(i + 1);
-            }
-            list.add(0);
-        }
-    }
-    public void print()  {
-        for (int i = 0; i < list.size() - 1; i++)  {
-            System.out.println("第" + (i + 1) + "天");
-            for (int j = 0; j < list.size() / 2; j++)  {
-                System.out.println(list.get(j) + "--"
-                        + list.get(list.size() - 1 - j));
-            }
-            int temp = list.pollLast();  //获取最后一个元素
-            //System.out.println(list.get(1));
-            list.add(1, temp);//将最后一个元素放在List的第二个位置
-        }
+
     }
     public static void main(String[] args) {
-        //实例化对象
-        RoundRobinSchedule r = new RoundRobinSchedule(16);
-        r.print();
+        System.out.println("please enter k:[eg:4](people = 2^k)");
+        Scanner scan =new Scanner(System.in);
+        int num;
+        while(true){
+            int enter = scan.nextInt();
+            if(enter>0){
+                num=(int) Math.pow(enter,2);
+                break;
+            }
+            System.out.println("enter error!");
+        }
+
+        System.out.println("people's number: "+num+"\n");
+
+        System.out.print("day:");
+        for(int i=1;i<num;i++){
+            System.out.print(i + "\t");
+        }
+        System.out.println();
+        int[][] a = table(num);
+        for(int i=0;i<a.length;i++){
+            System.out.print(a[i][0]+"|\t");
+            for(int j = 1;j<a[0].length;j++){
+                System.out.print(a[i][j] + "\t");
+            }
+            System.out.println();
+        }
     }
+
 
 }
