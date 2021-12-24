@@ -30,13 +30,13 @@ public class RoundRobinSchedule {
 
     }
     public static void main(String[] args) {
-        System.out.println("please enter k:[eg:4](people = 2^k)");
+        System.out.println("please enter k:[eg:4](people = 2k)");
         Scanner scan =new Scanner(System.in);
         int num;
         while(true){
             int enter = scan.nextInt();
             if(enter>0){
-                num=(int) Math.pow(2,enter);
+                num= enter * 2;
                 break;
             }
             System.out.println("enter error!");

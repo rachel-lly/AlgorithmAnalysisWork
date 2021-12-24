@@ -28,19 +28,19 @@ public class FlopShopSchedule {
         Element[] d = new Element[n];
 
         for(int i=0;i<n;i++){
-            int key= Math.min(a[i], b[i]);//按Johnson法则分别取对应的b[i]或a[i]值作为关键字
-            boolean job = a[i]<=b[i];//给符合条件a[i]<b[i]的放入到N1子集标记为true
+            int key= Math.min(a[i], b[i]);
+            boolean job = a[i]<=b[i];
             d[i] = new Element(key,i,job);
         }
 
-        Arrays.sort(d);//对数组d按关键字升序进行排序
+        Arrays.sort(d);
         int j=0,k=n-1;
 
         for(int i=0;i<n;i++){
             if(d[i].job){
-                c[j++]=d[i].index;//将排过序的数组d，属于N1的从前面进插入
+                c[j++]=d[i].index;
             }else{
-                c[k--]=d[i].index;//属于N2的从后面进入
+                c[k--]=d[i].index;
             }
 
         }

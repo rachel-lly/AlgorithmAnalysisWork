@@ -51,13 +51,13 @@ public class Bag {
     //回推求最优解
     public void traceback() {
 
-        System.out.println("\ngoods of bag: ");
+        System.out.print("\ngoods of bag: ");
 
         int nowWeight = bagWeight;
 
         for(int i=n;i>=1;i--){
             if(maxValue[i][nowWeight]>maxValue[i-1][nowWeight]){
-                System.out.print(i+"\t");
+                System.out.print(i+" ");
                 nowWeight-=weight[i-1];
 
             }
@@ -67,9 +67,20 @@ public class Bag {
     }
 
     public static void main(String[] args) {
+
         int[] weight = {2,1,3,2};
         int[] value = {12,10,20,15};
         int bagWeight = 5;
+        System.out.print("\nweight: ");
+        for(int w:weight){
+            System.out.print(w+"\t");
+        }
+        System.out.print("\nvalue: ");
+        for(int v:value){
+            System.out.print(v+"\t");
+        }
+        System.out.println("\nbagWeight: "+bagWeight);
+
         Bag bag = new Bag(weight,value,bagWeight);
         bag.bag(weight, value, bagWeight);
         bag.traceback();
